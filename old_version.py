@@ -19,24 +19,6 @@ class Graph:
     def __iter__(self):
         return iter(self.vertici.values())
 
-    # def add_vertice(self, nome):
-    #     self.num_vertici = self.num_vertici + 1
-    #     nuovo_vertice = Node(nome)
-    #     self.vertici[nome] = nuovo_vertice
-    #     return nuovo_vertice
-
-    # def get_vertice(self, n):
-    #     for vertice in self.vertici:
-    #         if vertice.name == n:
-    #             return vertice
-    #         else:
-    #             return None
-
-        # if n in range(self.num_vertici - 1):
-        #     return self.vertici[n]
-        # else:
-        #     return None
-
     def add_arco(self, nodo_partenza, nodo_arrivo, peso=0):
         # Adding the node to the source node
         node = AdjNode(nodo_arrivo.name)
@@ -51,39 +33,12 @@ class Graph:
 
         # print("add arco:", nodo_partenza.left, nodo_partenza.right, nodo_arrivo.left, nodo_arrivo.right)
 
-    # def get_vertici(self):
-    #     return self.vertici.keys()
-
-    # def set_predecessore(self, corrente):
-    #     self.predecessore = corrente
-
     def add_nodes(self, list):
         for v in list:
             self.num_vertici = self.num_vertici + 1
             self.vertici.append(v)
             # print("v:",  v.left, v.right)
         self.archi = [None] * self.num_vertici
-
-    # def distanza(self, u, v):
-    #     temp = self.archi[u.name]
-    #     while not isinstance(temp, type(None)):
-    #         copy = temp
-    #         if isinstance(temp, typing.List): temp = temp[0]
-    #         print(" -> {}".format(temp.vertex), end="")
-    #
-    #         if temp.vertex == v.name:
-    #             # if not isinstance(temp, type(None)):
-    #             # print("dentro IF: ", temp)
-    #             temp = temp.next
-    #             print(";  peso arco u,v= ", temp[1])
-    #             return temp[1]
-    #
-    #         temp = temp.next
-    #
-    #         if isinstance(temp[0], type(None)):
-    #             print(temp)
-    #             break
-    #     print(" \n")
 
     def get_archi(self, u):
         adiacenza = []
