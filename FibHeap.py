@@ -59,6 +59,16 @@ class Node:
         self.degree = 0
         self.mark = False if not mark else mark
 
+    def reset_properties(self, name):
+        self.name = name
+        self.key = None
+        self.left = None
+        self.right = None
+        self.p = None  # parent
+        self.child = None  # to any one of its children
+        self.degree = 0
+        self.mark = False
+
     def add_child(self, x):
         """Add a child to the node. If the node currently has no children, the
         child is made the representative child, otherwise, it is added to the
@@ -163,7 +173,7 @@ class Fheap:
                /   \
               (3)  (4)
         """
-        if self.min == None:
+        if self.min is None:
             self.add_root(x)
             self.min = x
         else:
@@ -184,7 +194,7 @@ class Fheap:
         "consolidate" (see consolidate) the resulted tree.
         """
         z = self.min
-        if z != None:
+        if z is not None:
             x = z.child
             for i in range(z.degree):
                 y = x.right
@@ -237,6 +247,7 @@ class Fheap:
             x = root
             root = root.right
             d = x.degree
+
             while A[d]:
                 y = A[d]
                 if x.key > y.key:
@@ -244,12 +255,13 @@ class Fheap:
                 self.link(y, x)
                 A[d] = None
                 d += 1
+
             A[d] = x
             counter -= 1
         self.min = None
         for i in range(len(A)):
             if A[i]:
-                if self.min == None:
+                if self.min is None:
                     self.min = A[i]
                 else:
                     if A[i].key < self.min.key:
