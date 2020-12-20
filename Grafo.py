@@ -1,7 +1,6 @@
 """
 Implementazione della classe grafo
-Rappresentata attraverso le liste di adiacenza
-e matrice di adiacenza (selezione attraverso parametro alla creazione del grafo)
+Rappresentata attraverso le liste di adiacenza e matrice di adiacenza
 """
 
 import sys
