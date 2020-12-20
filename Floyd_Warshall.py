@@ -1,9 +1,6 @@
 """
-Implementazione dell'algoritmo APSP di Floyd Warshall
-Utilizzando una rappresentazione del grafo attraverso matrice di adiacenza
-Considerando per ogni arco anche il proprio peso
-E sfruttando il Fibonacci Heap come coda con priorità
-Algoritmo per grafi orientati o non orientati e con un vertice sorgente S
+Implementazione dell'algoritmo APSP di Floyd-Warshall
+Algoritmo per grafi orientati o non orientati
 """
 
 import sys
