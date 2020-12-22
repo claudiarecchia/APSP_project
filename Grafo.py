@@ -9,6 +9,7 @@ from FibHeap import *
 
 class GraphAdjList:
     """ Struttura del grafo realizzata mediante liste di adiacenza """
+
     def __init__(self, vertici, connections, directed=False):
         self.vertici = vertici
         self._directed = directed
@@ -26,15 +27,34 @@ class GraphAdjList:
         for node1, node2, weight in connections:
             self.add(node1, node2, weight)
 
+    # def add(self, nodo1, nodo2, weight):
+    #     """ Aggiunge un arco tra i nodo1 e nodo2 """
+    #     if not self._directed:
+    #         pass
+    #     else:
+    #         nodo_peso_dir = [nodo2, weight]
+    #         if nodo_peso_dir not in self.graph[nodo1.name]:
+    #             self.graph[nodo1.name].append(nodo_peso_dir)
+    #         if not self._directed:
+    #             nodo_peso_ndir = [nodo1, weight]
+    #             if nodo_peso_ndir not in self.graph[nodo2.name]:
+    #                 self.graph[nodo2.name].append(nodo_peso_ndir)
+
     def add(self, nodo1, nodo2, weight):
         """ Aggiunge un arco tra i nodo1 e nodo2 """
-        nodo_peso_dir = [nodo2, weight]
-        if nodo_peso_dir not in self.graph[nodo1.name]:
-            self.graph[nodo1.name].append(nodo_peso_dir)
+        # controllare:
+        # se il grafo non è diretto, il secondo valore che si chiede di aggiungere potrebbe essere una ripetizione
+        # mantengo solamente il primo arco (qualunque sia il suo peso)
         if not self._directed:
-            nodo_peso_ndir = [nodo1, weight]
-            if nodo_peso_ndir not in self.graph[nodo2.name]:
-                self.graph[nodo2.name].append(nodo_peso_ndir)
+            to_add = False
+            if nodo2 not in (x[0] for x in self.graph[nodo1.name]) and nodo1 not in (x[0] for x in self.graph[nodo2.name]):
+                to_add = True
+            if to_add:
+                self.graph[nodo1.name].append([nodo2, weight])
+                self.graph[nodo2.name].append([nodo1, weight])
+        else:
+            if [nodo2, weight] not in self.graph[nodo1.name]:
+                self.graph[nodo1.name].append([nodo2, weight])
 
     def print_grafo(self):
         """
@@ -67,7 +87,8 @@ class GraphAdjMatrix:
         self._directed = directed
         self.init(connections)
 
-    def create_zero_matrix(self, n_vertici):
+    @staticmethod
+    def create_zero_matrix(n_vertici):
         mat = []
         for i in range(n_vertici):
             list = []
@@ -95,16 +116,29 @@ class GraphAdjMatrix:
         for node1, node2, weight in connections:
             self.add(node1, node2, weight)
 
+    # def add(self, nodo1, nodo2, weight):
+    #     """ Aggiunge un arco tra i nodo1 e nodo2 """
+    #     if self.graph[int(nodo1.name)][int(nodo2.name)] == 0:
+    #         self.graph[int(nodo1.name)][int(nodo2.name)] = weight
+    #     if not self._directed:
+    #         if self.graph[int(nodo2.name)][int(nodo1.name)] == 0:
+    #             self.graph[int(nodo2.name)][int(nodo1.name)] = weight
+
     def add(self, nodo1, nodo2, weight):
         """ Aggiunge un arco tra i nodo1 e nodo2 """
-        self.graph[int(nodo1.name)][int(nodo2.name)] = weight
         if not self._directed:
-            self.graph[int(nodo2.name)][int(nodo1.name)] = weight
+            to_add = False
+            if self.graph[int(nodo1.name)][int(nodo2.name)] == 0 and self.graph[int(nodo2.name)][int(nodo1.name)] == 0:
+                to_add = True
+            if to_add:
+                self.graph[int(nodo1.name)][int(nodo2.name)] = weight
+                self.graph[int(nodo2.name)][int(nodo1.name)] = weight
+        else:
+            if self.graph[int(nodo1.name)][int(nodo2.name)] == 0:
+                self.graph[int(nodo1.name)][int(nodo2.name)] = weight
 
     def print_grafo(self):
-        """
-        Stampa del grafo
-        """
+        """ Stampa del grafo """
         print("Stampa grafo:")
         # for riga in range(len(self.vertici)):
         #     print(self._graph[riga])

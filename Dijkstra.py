@@ -25,13 +25,15 @@ def dijkstra(grafo, nodo_partenza):
     fheap = makefheap()
     # Imposto la distanza del nodo di partenza a zero
     nodo_partenza.key = 0
+    nodo_partenza.added = True
     fheap.insert(nodo_partenza)
 
     while fheap.num_nodes > 0:
         # print("--------------------\n")
-
+        # print("num_nodes:", fheap.num_nodes)
         # Rimuovo un vertice con la distanza minore
         u = fheap.extract_min()
+        # print("num_nodes:", fheap.num_nodes)
 
         # print("Nodo estratto:", u.name)
 
@@ -39,19 +41,24 @@ def dijkstra(grafo, nodo_partenza):
         # print("Lista di adiacenza: ", lista_archi_u_v)
 
         for i in range(len(lista_archi_u_v)):
-            arco = lista_archi_u_v[i]
-
-        for i in range(len(lista_archi_u_v)):
-            arco = lista_archi_u_v[i]
-
-            v = arco[0]
-            dist = arco[1]
+            # controllo per matrice di adiacenza se v=u
+            if isinstance(lista_archi_u_v[0], int):
+                if u.name != i:
+                    dist = lista_archi_u_v[i]
+                    v = grafo.vertici[i]
+                else:
+                    continue
+            else:
+                arco = lista_archi_u_v[i]
+                v = arco[0]
+                dist = arco[1]
 
             # print("nodo: ", v.name, " -> ", u.key, v.key, dist)
 
-            if v.key == sys.maxsize:
-                # print("aggiungo all'heap")
+            if v.key == sys.maxsize and not v.added:
                 v.key = u.key + dist
+                # print("aggiungo all'heap con key", v.key)
+                v.added = True
                 fheap.insert(v)
 
             elif u.key + dist < v.key:
@@ -60,8 +67,10 @@ def dijkstra(grafo, nodo_partenza):
                 # print("valore u.key: ", u.key, "type: ", type(u.key))
                 fheap.decrease_key(v, u.key + dist)
 
-    # time = round(timer() - cpu, 6)
-    #print("TEMPO CPU:", time, "\n/////////////////////////////////////////////////////////////////////////////\n\n")
+        # print("num_nodes:", fheap.num_nodes)
+
+        # time = round(timer() - cpu, 6)
+        # print("TEMPO CPU:", time, "\n/////////////////////////////////////////////////////////////////////////////\n\n")
 
 
 def shortest(grafo, nodo_partenza):

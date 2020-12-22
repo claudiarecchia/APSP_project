@@ -58,6 +58,7 @@ class Node:
         self.child = child  # to any one of its children
         self.degree = 0
         self.mark = False if not mark else mark
+        self.added = False
 
     def reset_properties(self, name):
         self.name = name
@@ -68,6 +69,7 @@ class Node:
         self.child = None  # to any one of its children
         self.degree = 0
         self.mark = False
+        self.added = False
 
     def add_child(self, x):
         """Add a child to the node. If the node currently has no children, the

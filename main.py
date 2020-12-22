@@ -22,19 +22,38 @@ if __name__ == '__main__':
     else:
         raise IOError('Valore fornito non ammesso')
 
-    g = GraphAdjList(vertici, connections, directed=True)
+    assert connections, "Il grafo è vuoto"
+
+    g = GraphAdjMatrix(vertici, connections, directed=False)
     cpu_total = timer()
     for i in range(len(vertici)):
+        # print("ESECUZIONE ", i)
         dijkstra(g, g.get_nodo(i))
         shortest(g, g.get_nodo(i))
         for vertex in vertici:
             vertex.reset_properties(vertex.name)
 
     time = round(timer() - cpu_total, 6)
-    print("TEMPO CPU TOTALE APSP DIJKSTRA:", time,
+    print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA:", time,
           "\n/////////////////////////////////////////////////////////////////////////////\n\n")
 
-    g = GraphAdjMatrix(vertici, connections, directed=True)
+###############################################################################################################
+    g = GraphAdjList(vertici, connections, directed=False)
+    cpu_total = timer()
+    for i in range(len(vertici)):
+        # print("ESECUZIONE ", i)
+        dijkstra(g, g.get_nodo(i))
+        shortest(g, g.get_nodo(i))
+        for vertex in vertici:
+            vertex.reset_properties(vertex.name)
+
+    time = round(timer() - cpu_total, 6)
+    print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA:", time,
+          "\n/////////////////////////////////////////////////////////////////////////////\n\n")
+
+###############################################################################################################
+
+    g = GraphAdjMatrix(vertici, connections, directed=False)
     cpu_total = timer()
     floyd_warshall(g)
     time = round(timer() - cpu_total, 6)
