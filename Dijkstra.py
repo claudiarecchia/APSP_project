@@ -1,7 +1,5 @@
 """
 Implementazione dell'algoritmo SSSP di Dijkstra
-(Esecuzione ripetuta per n volte, dove n è il numero di vertici del grafo
-per ottenere un algoritmo APSP)
 Utilizzando una rappresentazione del grafo attraverso le liste di adiacenza
 Considerando per ogni arco anche il proprio peso (non negativo)
 E sfruttando il Fibonacci Heap come coda con priorità
@@ -17,7 +15,6 @@ from Grafo import *
 
 def dijkstra(grafo, nodo_partenza):
     """ Implementazione dell'algoritmo SSSP Dijkstra """
-    # cpu = timer()
     # Imposto la distanza di tutti i nodi a infinito
     for v in grafo.vertici:
         v.key = sys.maxsize
@@ -61,9 +58,6 @@ def dijkstra(grafo, nodo_partenza):
             elif u.key + dist < v.key:
                 # print("aggiorno valore nodo key con:", u.key + dist)
                 fheap.decrease_key(v, u.key + dist)
-
-        # time = round(timer() - cpu, 6)
-        # print("TEMPO CPU:", time, "\n/////////////////////////////////////////////////////////////////////////////\n\n")
 
 
 def shortest(grafo, nodo_partenza):

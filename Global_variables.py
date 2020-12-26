@@ -18,4 +18,4 @@ b = 12345
 a = 1103515245
 
 # probabilità per la creazione di archi nel'algoritmo Erdős–Rényi
-p = 1
+p = 0.1

@@ -29,24 +29,8 @@ class GraphAdjList:
         for node1, node2, weight in connections:
             self.add(node1, node2, weight)
 
-    # def add(self, nodo1, nodo2, weight):
-    #     """ Aggiunge un arco tra i nodo1 e nodo2 """
-    #     if not self._directed:
-    #         pass
-    #     else:
-    #         nodo_peso_dir = [nodo2, weight]
-    #         if nodo_peso_dir not in self.graph[nodo1.name]:
-    #             self.graph[nodo1.name].append(nodo_peso_dir)
-    #         if not self._directed:
-    #             nodo_peso_ndir = [nodo1, weight]
-    #             if nodo_peso_ndir not in self.graph[nodo2.name]:
-    #                 self.graph[nodo2.name].append(nodo_peso_ndir)
-
     def add(self, nodo1, nodo2, weight):
         """ Aggiunge un arco tra i nodo1 e nodo2 """
-        # controllare:
-        # se il grafo non è diretto, il secondo valore che si chiede di aggiungere potrebbe essere una ripetizione
-        # mantengo solamente il primo arco (qualunque sia il suo peso)
         if not self._directed:
             to_add = False
             if nodo2 not in (x[0] for x in self.graph[nodo1.name]) and nodo1 not in (x[0] for x in self.graph[nodo2.name]):
@@ -86,7 +70,6 @@ class GraphAdjMatrix:
     def __init__(self, vertici, connections, directed):
         self.vertici = vertici
         self.graph = self.create_zero_matrix(len(vertici))
-        # self.graph = np.zeros((len(vertici), len(vertici)), dtype=int)
         self._directed = directed
         self.init(connections)
 
@@ -120,14 +103,6 @@ class GraphAdjMatrix:
         for node1, node2, weight in connections:
             self.add(node1, node2, weight)
 
-    # def add(self, nodo1, nodo2, weight):
-    #     """ Aggiunge un arco tra i nodo1 e nodo2 """
-    #     if self.graph[int(nodo1.name)][int(nodo2.name)] == 0:
-    #         self.graph[int(nodo1.name)][int(nodo2.name)] = weight
-    #     if not self._directed:
-    #         if self.graph[int(nodo2.name)][int(nodo1.name)] == 0:
-    #             self.graph[int(nodo2.name)][int(nodo1.name)] = weight
-
     def add(self, nodo1, nodo2, weight):
         """ Aggiunge un arco tra i nodo1 e nodo2 """
         if not self._directed:
@@ -144,11 +119,6 @@ class GraphAdjMatrix:
     def print_grafo(self):
         """ Stampa del grafo """
         print("Stampa grafo:")
-        # for riga in range(len(self.vertici)):
-        #     print(self._graph[riga])
-
-        # print('\n'.join([''.join(['{:25}'.format(item) for item in row]) for row in self.graph]))
-        # print('\n')
         n_elements = []
         for i in range(len(self.vertici)): n_elements.append(i)
         print_nice = pd.DataFrame(self.graph, index=n_elements, columns=n_elements)

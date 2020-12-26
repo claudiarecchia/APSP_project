@@ -4,10 +4,11 @@ from Floyd_Warshall import *
 from timeit import default_timer as timer
 from Global_variables import *
 import networkit as nk
+import multiprocessing as mp
+import psutil
 
 
-def execute_with_networkit():
-    global connections, vertici, g, i
+def execute_with_networkit(file_name):
     print("APSP DIJKSTRA NETWORKIT:\n")
     connections, vertici = create_connections_from_file(file_name, networkit=True)
     g = nk.Graph(n=len(vertici), weighted=True, directed=True)
@@ -28,8 +29,7 @@ def execute_with_networkit():
     print(print_nice)
 
 
-def execute_with_FW():
-    global g, cpu_total, time
+def execute_FloydWarshall(vertici, connections):
     g = GraphAdjMatrix(vertici, connections, directed=DIR)
     cpu_total = timer()
     floyd_warshall(g)
@@ -39,7 +39,6 @@ def execute_with_FW():
 
 
 def execute_Dikstra_APSP(vertici, connections, adj_list):
-    global g, cpu_total, i, vertex, time
     if adj_list:
         g = GraphAdjList(vertici, connections, directed=DIR)
     else:
@@ -52,12 +51,51 @@ def execute_Dikstra_APSP(vertici, connections, adj_list):
         for vertex in vertici:
             vertex.reset_properties(vertex.name)
     time = round(timer() - cpu_total, 6)
+
+    values = psutil.cpu_percent(percpu=True)
+    print("Valori percentuali CPU:", values)
+
     if adj_list:
         print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA:", time,
-          "\n/////////////////////////////////////////////////////////////////////////////\n\n")
+          "\n/////////////////////////////////////////////////////////////////////////////\n")
     else:
         print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA:", time,
-          "\n/////////////////////////////////////////////////////////////////////////////\n\n")
+          "\n/////////////////////////////////////////////////////////////////////////////\n")
+
+
+def exec_dijkstra(grafo, num_nodo):
+    dijkstra(grafo, grafo.get_nodo(num_nodo))
+    for v in grafo.vertici:
+        v.reset_properties(v.name)
+
+
+def execute_Dikstra_APSP_parallel(vertici, connections, adj_list):
+    if adj_list:
+        g = GraphAdjList(vertici, connections, directed=DIR)
+    else:
+        g = GraphAdjMatrix(vertici, connections, directed=DIR)
+
+    num_cores = mp.cpu_count()
+    print("num cores: ", num_cores)
+
+    cpu_total = timer()
+
+    jobs = []
+    for i in range(len(vertici)):
+        p = mp.Process(target=exec_dijkstra, args=(g, i))
+        jobs.append(p)
+        p.start()
+
+    time = round(timer() - cpu_total, 6)
+    values = psutil.cpu_percent(percpu=True)
+    print("Valori percentuali CPU:", values)
+
+    if adj_list:
+        print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA PARALLELO:", time,
+          "\n/////////////////////////////////////////////////////////////////////////////\n")
+    else:
+        print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA PARALLELO:", time,
+          "\n/////////////////////////////////////////////////////////////////////////////\n")
 
 
 if __name__ == '__main__':
@@ -82,6 +120,9 @@ if __name__ == '__main__':
 
     execute_Dikstra_APSP(vertici, connections, adj_list=True)
 
-    execute_with_FW()
+    execute_FloydWarshall(vertici, connections)
 
-    execute_with_networkit()
+    execute_Dikstra_APSP_parallel(vertici, connections, adj_list=True)
+
+    if DIR:
+        execute_with_networkit(file_name)

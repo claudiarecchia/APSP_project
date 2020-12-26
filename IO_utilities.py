@@ -55,7 +55,6 @@ def write_connections_to_file(connections, file_name):
         print("Scritte su file", lines, "righe\n")
 
 
-
 def create_connections_from_file(file_name, networkit=False):
     """
     Attraverso tale funzione si rende possibile la creazione di un grafo uguale ad uno precedentemente creato,
@@ -68,12 +67,7 @@ def create_connections_from_file(file_name, networkit=False):
         connections = []
         for row in reader:
             if line_count == 0:
-                # print(f'I nomi delle colonne sono {", ".join(row)}')
                 line_count += 1
-            # print(f' ( \t{row["nodo_partenza"]} , {row["nodo_arrivo"]} , {row["peso_arco"]} )')
-
-            # nodo_p, nodo_a = get_nodes(int(row["nodo_partenza"]), int(row["nodo_arrivo"]))
-            # connections.append([nodo_p, nodo_a, int(row["peso_arco"])])
 
             vertices_list.append(int(row["nodo_partenza"]))
             vertices_list.append(int(row["nodo_arrivo"]))
@@ -89,9 +83,8 @@ def create_connections_from_file(file_name, networkit=False):
         vertices_list = dict.fromkeys(vertices_list)
         vertices_list = sorted(vertices_list)
         for i in range(len(vertices_list) - 1):
-            if vertices_list[i+1] != vertices_list[i] + 1:
-                vertices_list.insert(i+1, i+1)
-        # print(list)
+            if vertices_list[i + 1] != vertices_list[i] + 1:
+                vertices_list.insert(i + 1, i + 1)
 
         if not networkit:
             # creazione oggetti Node
@@ -99,12 +92,7 @@ def create_connections_from_file(file_name, networkit=False):
                 vertices_list[i] = Node(i)
 
             for element in connections:
-                # print(element)
                 element[0] = vertices_list[element[0]]
                 element[1] = vertices_list[element[1]]
 
-        # print(connections)
-
     return connections, vertices_list
-
-
