@@ -6,9 +6,6 @@ E sfruttando il Fibonacci Heap come coda con priorità
 Algoritmo per grafi orientati o non orientati e con un vertice sorgente S
 """
 
-from FibHeap import *
-from timeit import default_timer as timer
-import sys
 from IO_utilities import *
 from Grafo import *
 
@@ -41,6 +38,7 @@ def dijkstra(grafo, nodo_partenza):
                     dist = lista_archi_u_v[i]
                     v = grafo.vertici[i]
                 else:
+                    # se u=v allora procedo con il prossimo elemento nella lista di adiacenza
                     continue
             else:
                 arco = lista_archi_u_v[i]

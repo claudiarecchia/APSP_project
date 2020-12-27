@@ -65,8 +65,8 @@ class Node:
         self.key = None
         self.left = None
         self.right = None
-        self.p = None  # parent
-        self.child = None  # to any one of its children
+        self.p = None
+        self.child = None
         self.degree = 0
         self.mark = False
         self.added = False

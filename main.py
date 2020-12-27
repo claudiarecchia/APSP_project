@@ -7,8 +7,14 @@ import networkit as nk
 import multiprocessing as mp
 import psutil
 
-
 def execute_with_networkit(file_name):
+    """
+    Utilizzo le funzioni di networkit per verificare la correttezza degli algoritmi implementati.
+    Networkit fornisce lo stesso risultato degli algoritmi solamente nel caso in cui il grafo sia diretto (DIR=True)
+    poichè nella funzione addEdge di nk.Graph "It is not checked whether this edge already exists, thus it is possible
+    to create multi-edges.", il quale controllo invece viene effettuato nelle implementazioni realizzate,
+    presenti nel file Grafo.py
+    """
     print("APSP DIJKSTRA NETWORKIT:\n")
     connections, vertici = create_connections_from_file(file_name, networkit=True)
     g = nk.Graph(n=len(vertici), weighted=True, directed=True)
@@ -65,6 +71,7 @@ def execute_Dikstra_APSP(vertici, connections, adj_list):
 
 def exec_dijkstra(grafo, num_nodo):
     dijkstra(grafo, grafo.get_nodo(num_nodo))
+    # shortest(grafo, grafo.get_nodo(num_nodo))
     for v in grafo.vertici:
         v.reset_properties(v.name)
 
@@ -107,7 +114,15 @@ if __name__ == '__main__':
         vertici = []
         for i in range(n):
             vertici.append(Node(i))
-        connections = create_ER_graph(vertici, m, file_name)
+
+        graph_type = int(input("Creare un grafo sul modello ER (1) o un grafo a path (2) ?:\n"))
+        if graph_type == 1:
+            connections = create_ER_graph(vertici, m, file_name)
+        elif graph_type == 2:
+            connections = create_path_graph(vertici, file_name)
+        else:
+            raise IOError('Valore fornito non ammesso')
+
     elif value == 2:
         file_name = (input("Inserire nome file di lettura del grafo:\n"))
         connections, vertici = create_connections_from_file(file_name)

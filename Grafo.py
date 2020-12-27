@@ -4,8 +4,6 @@ Rappresentata attraverso le liste di adiacenza e matrice di adiacenza
 """
 
 import sys
-from FibHeap import *
-import numpy as np
 import pandas as pd
 
 
@@ -17,20 +15,25 @@ class GraphAdjList:
         self._directed = directed
         self.graph = {}
         self.init_adj(connections)
+        # self.print_grafo()
 
     def init_adj(self, connections):
         """ Inizializzazione del grafo """
         for i in range(len(self.vertici)):
             self.graph[i] = []
         self.make_connections(connections)
-        # self.print_grafo()
 
     def make_connections(self, connections):
         for node1, node2, weight in connections:
             self.add(node1, node2, weight)
 
     def add(self, nodo1, nodo2, weight):
-        """ Aggiunge un arco tra i nodo1 e nodo2 """
+        """
+        Aggiunge un arco tra i nodo1 e nodo2
+        Se il grafo non è diretto, verifico precedentemente se esiste già una connessione tra tali nodi
+        Pertanto, se il grafo è indiretto può esistere solo un arco u-v
+        Se il grafo è diretto, possono esistere al massimo due archi, tali che u->v, v->u
+        """
         if not self._directed:
             to_add = False
             if nodo2 not in (x[0] for x in self.graph[nodo1.name]) and nodo1 not in (x[0] for x in self.graph[nodo2.name]):
@@ -87,8 +90,6 @@ class GraphAdjMatrix:
         """ Inizializzazione del grafo """
         self.make_connections(connections)
         self.set_infinity()
-        # self.print_grafo()
-
 
     def set_infinity(self):
         """ Imposta a infinito la distanza tra i vertici che non sono connessi"""
@@ -104,7 +105,13 @@ class GraphAdjMatrix:
             self.add(node1, node2, weight)
 
     def add(self, nodo1, nodo2, weight):
-        """ Aggiunge un arco tra i nodo1 e nodo2 """
+        """
+        Aggiunge un arco tra nodo1 e nodo2
+        Se il grafo non è diretto, verifico precedentemente se posso aggiungere l'arco bidirezionale senza sovrascrivere
+        precedenti valori
+        Pertanto, se il grafo è indiretto può esistere solo un arco u-v
+        Se il grafo è diretto, possono esistere al massimo due archi, tali che u->v, v->u
+        """
         if not self._directed:
             to_add = False
             if self.graph[int(nodo1.name)][int(nodo2.name)] == 0 and self.graph[int(nodo2.name)][int(nodo1.name)] == 0:
@@ -125,10 +132,12 @@ class GraphAdjMatrix:
         print(print_nice)
 
     def get_archi(self, u):
-        """ Ritorna la lista di adiacenza dell nodo u """
+        """
+        Ritorna la lista di adiacenza dell nodo u (riga della matrice)
+        """
         adiacenza = self.graph[u.name]
         return adiacenza
 
     def get_nodo(self, n):
-        """ Ritorna l'oggetto nodo richiesto """
+        """ Ritorna il nodo richiesto """
         return self.vertici[n]
