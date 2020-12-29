@@ -16,9 +16,9 @@ def execute_with_networkit(file_name):
     presenti nel file Grafo.py
     """
     print("APSP DIJKSTRA NETWORKIT:\n")
-    connections, vertici = create_connections_from_file(file_name, networkit=True)
-    g = nk.Graph(n=len(vertici), weighted=True, directed=True)
-    for tupla in connections:
+    conn, ver = create_connections_from_file(file_name, networkit=True)
+    g = nk.Graph(n=len(ver), weighted=True, directed=True)
+    for tupla in conn:
         g.addEdge(tupla[0], tupla[1], tupla[2])
     dist = nk.distance.APSP(g)
     dist.run()
@@ -30,7 +30,7 @@ def execute_with_networkit(file_name):
             else:
                 matrix[riga][col] = int(matrix[riga][col])
     n_elements = []
-    for i in range(len(vertici)): n_elements.append(i)
+    for i in range(len(ver)): n_elements.append(i)
     print_nice = pd.DataFrame(matrix, index=n_elements, columns=n_elements)
     print(print_nice)
 
@@ -84,18 +84,25 @@ def execute_Dikstra_APSP_parallel(vertici, connections, adj_list):
 
     num_cores = mp.cpu_count()
     print("num cores: ", num_cores)
-
+    process_creation = 0
     cpu_total = timer()
 
     jobs = []
     for i in range(len(vertici)):
+        process_creation_begin = timer()
         p = mp.Process(target=exec_dijkstra, args=(g, i))
+        process_creation_end = timer()
         jobs.append(p)
+        process_creation = process_creation + (process_creation_end - process_creation_begin)
         p.start()
 
+    for job in jobs:
+        job.join()
+        job.close()
     time = round(timer() - cpu_total, 6)
     values = psutil.cpu_percent(percpu=True)
     print("Valori percentuali CPU:", values)
+    print("Tempo totale per la creazione dei processi:", process_creation)
 
     if adj_list:
         print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA PARALLELO:", time,
@@ -141,3 +148,7 @@ if __name__ == '__main__':
 
     if DIR:
         execute_with_networkit(file_name)
+
+
+
+

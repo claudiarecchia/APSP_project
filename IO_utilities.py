@@ -82,24 +82,18 @@ def create_connections_from_file(file_name, networkit=False):
         for row in reader:
             if line_count == 0:
                 line_count += 1
-
             vertices_list.append(int(row["nodo_partenza"]))
             vertices_list.append(int(row["nodo_arrivo"]))
-
             connections.append([int(row["nodo_partenza"]), int(row["nodo_arrivo"]), int(row["peso_arco"])])
-
             line_count += 1
         print(f'Lette da file {line_count} linee.')
-
         # gestione nodi isolati
         # dalla generazione del grafo attraverso il metodo ER non è possibile sapere
         # se il grafo creato è connesso
-        vertices_list = dict.fromkeys(vertices_list)
-        vertices_list = sorted(vertices_list)
-        for i in range(len(vertices_list) - 1):
-            if vertices_list[i + 1] != vertices_list[i] + 1:
-                vertices_list.insert(i + 1, i + 1)
-
+        # vengono considerati tutti i vertici fino al vertice massimo presente nel file di lettura
+        if vertices_list:
+            m = max(vertices_list)
+            vertices_list = [x for x in range(0, m + 1)]
         if not networkit:
             # creazione oggetti Node
             for i in range(len(vertices_list)):
@@ -110,3 +104,4 @@ def create_connections_from_file(file_name, networkit=False):
                 element[1] = vertices_list[element[1]]
 
     return connections, vertices_list
+
