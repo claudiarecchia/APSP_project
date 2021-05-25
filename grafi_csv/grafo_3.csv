@@ -1,0 +1,4 @@
+nodo_partenza,nodo_arrivo,peso_arco
+0,1,19
+0,2,24
+2,0,31
