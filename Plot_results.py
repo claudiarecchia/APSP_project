@@ -52,61 +52,61 @@ for ex in executions:
             ex_time.append(float(ex[2]))  # tempo di esecuzione
             # y_values.append(float(ex[5]))  # indice di densità
             num_nodes.append(float(ex[3]))  # n_nodi
-            num_edges.append(float(ex[4]))  # n_edges
+            num_edges.append(ex[4])  # n_edges
         elif "F" in ex[1]:
             ex_time_f.append(float(ex[2]))  # tempo di esecuzione
             # y_values_F.append(float(ex[5]))  # indice di densità
             num_nodes_f.append(float(ex[3]))  # n_nodi
-            num_edges_f.append(float(ex[4]))  # n_edges
+            num_edges_f.append(ex[4])   # n_edges
 
     if "ER_p01" in ex[0]:
         if "D" in ex[1]:
             ex_time_d_er01.append(float(ex[2]))  # tempo di esecuzione
             # y_values.append(float(ex[5]))  # indice di densità
             num_nodes_d_er01.append(float(ex[3]))  # n_nodi
-            num_edges_d_er01.append(float(ex[4]))  # n_edges
+            num_edges_d_er01.append(ex[4])   # n_edges
         elif "F" in ex[1]:
             ex_time_f_er01.append(float(ex[2]))  # tempo di esecuzione
             # y_values_F.append(float(ex[5]))  # indice di densità
             um_nodes_f_er01.append(float(ex[3]))  # n_nodi
-            num_edges_f_er01.append(float(ex[4]))  # n_edges
+            num_edges_f_er01.append(ex[4])   # n_edges
 
     if "ER_p05" in ex[0]:
         if "D" in ex[1]:
             ex_time_d_er05.append(float(ex[2]))  # tempo di esecuzione
             # y_values.append(float(ex[5]))  # indice di densità
             num_nodes_d_er05.append(float(ex[3]))  # n_nodi
-            num_edges_d_er05.append(float(ex[4]))  # n_edges
+            num_edges_d_er05.append(ex[4])   # n_edges
         elif "F" in ex[1]:
             ex_time_f_er05.append(float(ex[2]))  # tempo di esecuzione
             # y_values_F.append(float(ex[5]))  # indice di densità
             um_nodes_f_er05.append(float(ex[3]))  # n_nodi
-            num_edges_f_er05.append(float(ex[4]))  # n_edges
+            num_edges_f_er05.append(ex[4])   # n_edges
 
     if "ER_p1" in ex[0]:
         if "D" in ex[1]:
             ex_time_d_er1.append(float(ex[2]))  # tempo di esecuzione
             # y_values.append(float(ex[5]))  # indice di densità
             num_nodes_d_er1.append(float(ex[3]))  # n_nodi
-            num_edges_d_er1.append(float(ex[4]))  # n_edges
+            num_edges_d_er1.append(ex[4])   # n_edges
         elif "F" in ex[1]:
             ex_time_f_er1.append(float(ex[2]))  # tempo di esecuzione
             # y_values_F.append(float(ex[5]))  # indice di densità
             um_nodes_f_er1.append(float(ex[3]))  # n_nodi
-            num_edges_f_er1.append(float(ex[4]))  # n_edges
+            num_edges_f_er1.append(ex[4])   # n_edges
 
     if "path" in ex[0]:
         if "D" in ex[1]:
             ex_time_d_path.append(float(ex[2]))  # tempo di esecuzione
             # y_values.append(float(ex[5]))  # indice di densità
             num_nodes_d_path.append(float(ex[3]))  # n_nodi
-            num_edges_d_path.append(float(ex[4]))  # n_edges
+            num_edges_d_path.append(ex[4])   # n_edges
 
         elif "F" in ex[1]:
             ex_time_f_path.append(float(ex[2]))  # tempo di esecuzione
             # y_values_F.append(float(ex[5]))  # indice di densità
             um_nodes_f_path.append(float(ex[3]))  # n_nodi
-            num_edges_f_path.append(float(ex[4]))  # n_edges
+            num_edges_f_path.append(ex[4])   # n_edges
 
     if (ex[0] == "g_ER_p01_125" or ex[0] == "g_ER_p05_125" or ex[0] == "g_ER_p1_125") and ("D" in ex[1]):
         density_dijkstra_125.append(ex[5])
@@ -134,7 +134,7 @@ plt.plot(num_nodes_f, ex_time_f, 'r', marker='o', label='Floyd-Warshall')
 plt.title("Barabasi-Albert")
 plt.ylabel('Tempo di esecuzione')
 # plt.ylabel('Indice di densità')
-plt.xlabel('Numero nodi')
+plt.xlabel('Numero nodi ')
 plt.legend()
 plt.show()
 
