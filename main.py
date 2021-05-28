@@ -42,8 +42,8 @@ def execute_FloydWarshall(vertici, connections):
     cpu_total = timer()
     floyd_warshall(g)
     time = round(timer() - cpu_total, 6)
-    print("TEMPO CPU TOTALE APSP FLOYD-WARSHALL:", time,
-          "\n/////////////////////////////////////////////////////////////////////////////\n\n")
+    # print("TEMPO CPU TOTALE APSP FLOYD-WARSHALL:", time,
+    #       "\n/////////////////////////////////////////////////////////////////////////////\n\n")
     return time
 
 
@@ -64,12 +64,12 @@ def execute_Dijkstra_APSP(vertici, connections, adj_list):
     values = psutil.cpu_percent(percpu=True)
     print("Valori percentuali CPU:", values)
 
-    if adj_list:
-        print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA:", time,
-              "\n/////////////////////////////////////////////////////////////////////////////\n")
-    else:
-        print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA:", time,
-              "\n/////////////////////////////////////////////////////////////////////////////\n")
+    # if adj_list:
+    #     print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA:", time,
+    #           "\n/////////////////////////////////////////////////////////////////////////////\n")
+    # else:
+    #     print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA:", time,
+    #           "\n/////////////////////////////////////////////////////////////////////////////\n")
     return time
 
 def exec_dijkstra(grafo, num_nodo):
@@ -167,22 +167,51 @@ if __name__ == '__main__':
     # if DIR:
     #     execute_with_networkit(file_name)
 
+
+    graph_list = []
+    real_graph_list = []
     for folder in folders:
         for filename in os.listdir("./" + folder):
             file_name = filename.replace('.csv', '')
-            connections, vertici = create_connections_from_file(file_name)
-            if DIR:
-                index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))    # L / n(n - 1)
+            if folder == folders[0]:
+                graph_list.append(file_name)
             else:
-                index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))    # 2L / n(n - 1)
+                real_graph_list.append(file_name)
 
-            time = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
-            report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
 
-            time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
-            report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
+    graph_list = sorted(graph_list)
+    print(graph_list, real_graph_list)
 
-            time = execute_FloydWarshall(vertici, connections)
-            report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
+    list1 = graph_list[0:5]
+    list2 = graph_list[5:10]
+    list3 = graph_list[10:15]
+    list4 = graph_list[15:20]
+    list5 = graph_list[20:25]
+    list_input = int(input("1 to 6: "))
+
+    g_list = []
+
+    if list_input == 1: g_list = list1
+    if list_input == 2: g_list = list2
+    if list_input == 3: g_list = list3
+    if list_input == 4: g_list = list4
+    if list_input == 5: g_list = list5
+    if list_input == 6: g_list = real_graph_list
+
+    for file_name in g_list:
+        connections, vertici = create_connections_from_file(file_name)
+        if DIR:
+            index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))    # L / n(n - 1)
+        else:
+            index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))    # 2L / n(n - 1)
+
+        time = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
+        report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
+
+        time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
+        report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
+
+        time = execute_FloydWarshall(vertici, connections)
+        report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
 
 
