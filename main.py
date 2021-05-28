@@ -180,7 +180,6 @@ if __name__ == '__main__':
 
 
     graph_list = sorted(graph_list)
-    print(graph_list, real_graph_list)
 
     list1 = graph_list[0:5]
     list2 = graph_list[5:10]
