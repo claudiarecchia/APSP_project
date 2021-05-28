@@ -6,7 +6,7 @@ import networkit as nk
 import multiprocessing as mp
 import psutil
 from Graphs_generators import *
-
+import os
 
 
 def execute_with_networkit(file_name):
@@ -139,9 +139,9 @@ if __name__ == '__main__':
     #
     # elif value == 2:
         # file_name = (input("Inserire nome file di lettura del grafo:\n"))
-        # connections, vertici = create_connections_from_file(file_name)
+        # connections, vertici = create_connections_from_file()
 
-    # connections, vertici = create_connections_from_file_real_graph("g_BA_125")
+    # connections, vertici = create_connections_from_file_real_graph("p2p-Gnutella08")
         # facebook_combined
     # else:
     #     raise IOError('Valore fornito non ammesso')
@@ -167,22 +167,22 @@ if __name__ == '__main__':
     # if DIR:
     #     execute_with_networkit(file_name)
 
-    import os
+    for folder in folders:
+        for filename in os.listdir("./" + folder):
+            file_name = filename.replace('.csv', '')
+            connections, vertici = create_connections_from_file(file_name)
+            if DIR:
+                index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))    # L / n(n - 1)
+            else:
+                index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))    # 2L / n(n - 1)
 
-    for filename in os.listdir("./generated_graphs"):
-        file_name = filename.replace('.csv', '')
-        connections, vertici = create_connections_from_file(file_name)
-        if DIR:
-            index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))    # L / n(n - 1)
-        else:
-            index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))    # 2L / n(n - 1)
+            time = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
+            report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
 
-        time = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
-        report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
+            time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
+            report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
 
-        time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
-        report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
+            time = execute_FloydWarshall(vertici, connections)
+            report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
 
-        time = execute_FloydWarshall(vertici, connections)
-        report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
 

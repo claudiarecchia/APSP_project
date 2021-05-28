@@ -34,3 +34,5 @@ report_dir = "results"
 
 # nome file utilizzato per reperire i dati delle esecuzioni degli algoritmi
 report_file = "results"
+
+folders = [graph_dir, real_graph_dir]
