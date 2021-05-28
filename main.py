@@ -197,12 +197,19 @@ if __name__ == '__main__':
     if list_input == 5: g_list = list5
     if list_input == 6: g_list = real_graph_list
 
+
     for file_name in g_list:
-        connections, vertici = create_connections_from_file(file_name)
+        # if "000" in file_name:
+        #     continue
+        print(file_name)
+        connections, vertici = create_connections_from_file_real_graph(file_name)
         if DIR:
             index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))    # L / n(n - 1)
         else:
             index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))    # 2L / n(n - 1)
+
+        time = execute_FloydWarshall(vertici, connections)
+        report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
 
         time = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
         report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
@@ -210,7 +217,6 @@ if __name__ == '__main__':
         time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
         report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
 
-        time = execute_FloydWarshall(vertici, connections)
-        report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
+
 
 
