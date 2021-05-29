@@ -1,23 +1,18 @@
 from datetime import time
-
 import networkit as nk
 import random
 from Global_variables import *
 from IO_utilities import *
+import os
 
 
 def create_barabasi_albert_graph(n_vertici, file_name):
+    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     bara_graph = nk.generators.BarabasiAlbertGenerator(k, n_vertici, n0=0, batagelj=True).generate()
-    # print("numero nodi", bara_graph.numberOfNodes(), "- numero archi", bara_graph.numberOfEdges())
-
     connections = []
     for u, v in bara_graph.iterEdges():
         if u != v:  # no self-loop
-            connections.append([u, v, randint(0, MAX)])
-
-    # print("------------------------------------------")
-    # for element in connections:
-    #     print(element)
+            connections.append([u, v, randint(1, MAX)])
 
     write_connections_to_file(connections, file_name)
     connections, vertices_list = create_connections_from_file_real_graph(file_name)

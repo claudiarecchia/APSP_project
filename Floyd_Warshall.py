@@ -14,6 +14,7 @@ def floyd_warshall(grafo):
         for i in range(len(vertici)):
             for j in range(len(vertici)):
                 matrice[i][j] = min(matrice[i][j], matrice[i][k] + matrice[k][j])
+    return matrice
     # print_solution(matrice, vertici)
 
 

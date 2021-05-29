@@ -15,7 +15,7 @@ class GraphAdjList:
         self._directed = directed
         self.graph = {}
         self.init_adj(connections)
-        # self.print_grafo()
+        # self.print_graph()
 
     def init_adj(self, connections):
         """ Inizializzazione del grafo """
@@ -38,17 +38,14 @@ class GraphAdjList:
         """
         if not self._directed:
             to_add = False
-            # if nodo2 not in (x[0] for x in self.graph[nodo1.name]) and nodo1 not in (x[0] for x in self.graph[nodo2.name]):
             if nodo2 not in (x[0] for x in self.graph[nodo1]) and nodo1 not in (x[0] for x in self.graph[nodo2]):
                 to_add = True
             if to_add:
-                # self.graph[nodo1.name].append([nodo2, weight])
-                # self.graph[nodo2.name].append([nodo1, weight])
                 self.graph[nodo1].append([nodo2, weight])
                 self.graph[nodo2].append([nodo1, weight])
         else:
-            # if [nodo2, weight] not in self.graph[nodo1.name]:
-            if [nodo2, weight] not in self.graph[nodo1]:
+            # se è già stato inserito un arco da nodo1->nodo2, non verrà più modificato con eventuali altri valori
+            if nodo2 not in (x[0] for x in self.graph[nodo1]):
                 self.graph[nodo1].append([nodo2, weight])
 
     def print_graph(self):
@@ -80,11 +77,9 @@ class GraphAdjMatrix:
     def __init__(self, vertici, connections, directed):
         self.vertici = vertici
         self.graph = self.create_zero_matrix(len(vertici))
-        # self.graph = self.create_zero_matrix()
-        # self.graph = numpy.full((num_rows, num_cols), Cell())
-        # self.graph = self.create_zero_matrix(int(vertici[len(vertici)-1].name))
         self._directed = directed
         self.init(connections)
+        # self.print_graph()
 
     @staticmethod
     def create_zero_matrix(n_vertici):
@@ -96,16 +91,6 @@ class GraphAdjMatrix:
             mat.append(list)
         return mat
 
-    # def create_zero_matrix(self):
-    #     mat = []
-    #     for i in self.vertici:
-    #         list = []
-    #         for j in self.vertici:
-    #             list.append(0)
-    #         # mat.append(list)
-    #         mat.insert(j.name, list)
-    #     return mat
-
     def init(self, connections):
         """ Inizializzazione del grafo """
         self.make_connections(connections)
@@ -115,8 +100,6 @@ class GraphAdjMatrix:
         """ Imposta a infinito la distanza tra i vertici che non sono connessi"""
         for riga in range(len(self.vertici)):
             for col in range(len(self.vertici)):
-        # for riga in self.vertici:
-        #     for col in self.vertici:
                 if riga == col:
                     pass
                 elif self.graph[riga][col] == 0:
@@ -142,8 +125,6 @@ class GraphAdjMatrix:
                 self.graph[int(nodo1.name)][int(nodo2.name)] = weight
                 self.graph[int(nodo2.name)][int(nodo1.name)] = weight
         else:
-            # if self.graph[int(nodo1.name)][int(nodo2.name)] == 0:
-                # self.graph[int(nodo1.name)][int(nodo2.name)] = weight
             if self.graph[nodo1.index][nodo2.index] == 0:
                 self.graph[nodo1.index][nodo2.index] = weight
 
@@ -151,7 +132,6 @@ class GraphAdjMatrix:
         """ Stampa del grafo """
         print("Stampa grafo:")
         n_elements = []
-        # for i in range(len(self.vertici)): n_elements.append(i)
         for vertex in self.vertici: n_elements.append(vertex.name)
         print_nice = pd.DataFrame(self.graph, index=n_elements, columns=n_elements)
         print(print_nice)
@@ -160,7 +140,6 @@ class GraphAdjMatrix:
         """
         Ritorna la lista di adiacenza dell nodo u (riga della matrice)
         """
-        # adiacenza = self.graph[u.name]
         adiacenza = self.graph[u.index]
         return adiacenza
 
