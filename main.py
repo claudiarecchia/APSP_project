@@ -21,7 +21,7 @@ def execute_with_networkit(file_name):
     """
     print("APSP DIJKSTRA NETWORKIT:\n")
     conn, ver = create_connections_from_file(file_name, networkit=True)
-    g = nk.Graph(n=len(ver), weighted=True, directed=True)
+    g = nk.Graph(n=max(ver) + 1, weighted=True, directed=True)
     for tupla in conn:
         g.addEdge(tupla[0], tupla[1], tupla[2])
     dist = nk.distance.APSP(g)
@@ -33,10 +33,13 @@ def execute_with_networkit(file_name):
                 matrix[riga][col] = "INF"
             else:
                 matrix[riga][col] = int(matrix[riga][col])
-    n_elements = []
-    for i in range(len(ver)): n_elements.append(i)
-    print_nice = pd.DataFrame(matrix, index=n_elements, columns=n_elements)
-    print(print_nice)
+    for i in range(len(ver)):
+        for j in range(len(ver)):
+            if i != j:
+                print("Il vertice", ver[i], "è a distanza", matrix[ver[i]][ver[j]], "dal verice", ver[j])
+    # for i in range(len(ver)): n_elements.append(i)
+    # print_nice = pd.DataFrame(matrix, index=n_elements, columns=n_elements)
+    # print(print_nice)
 
 
 def execute_FloydWarshall(vertici, connections):
@@ -49,30 +52,27 @@ def execute_FloydWarshall(vertici, connections):
     return time, matrice
 
 
-def execute_Dijkstra_APSP(vertici, connections, adj_list):
-    if adj_list:
-        g = GraphAdjList(vertici, connections, directed=DIR)
-    else:
-        g = GraphAdjMatrix(vertici, connections, directed=DIR)
+def execute_Dijkstra_APSP(vertici, connections):
+    g = GraphAdjList(vertici, connections, directed=DIR)
 
-    mat = []
-    for i in range(len(vertici)):
-        list = []
-        for j in range(len(vertici)):
-            list.append(0)
-        mat.append(list)
+    # mat = []
+    # for i in range(len(vertici)):
+    #     list = []
+    #     for j in range(len(vertici)):
+    #         list.append(0)
+    #     mat.append(list)
 
     cpu_total = timer()
     for i in range(len(vertici)):
         dijkstra(g, g.get_node(i))
-        shortest(g, g.get_node(i), mat)
+        # shortest(g, g.get_node(i), mat)
         for vertex in vertici:
             vertex.reset_properties(vertex.name)
 
     # print("DIJKSTRA")
     # print_solution(mat, vertici)
 
-    # time = round(timer() - cpu_total, 6)
+    time = round(timer() - cpu_total, 6)
     #
     # values = psutil.cpu_percent(percpu=True)
     # print("Valori percentuali CPU:", values)
@@ -83,20 +83,18 @@ def execute_Dijkstra_APSP(vertici, connections, adj_list):
     # else:
     #     print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA:", time,
     #           "\n/////////////////////////////////////////////////////////////////////////////\n")
-    return time, mat
+    return time
+
 
 def exec_dijkstra(grafo, num_nodo):
     dijkstra(grafo, grafo.get_node(num_nodo))
-    # shortest(grafo, grafo.get_nodo(num_nodo))
+    # shortest(grafo, grafo.get_node(num_nodo))
     for v in grafo.vertici:
         v.reset_properties(v.name)
 
 
-def execute_Dijkstra_APSP_parallel(vertici, connections, adj_list):
-    if adj_list:
-        g = GraphAdjList(vertici, connections, directed=DIR)
-    else:
-        g = GraphAdjMatrix(vertici, connections, directed=DIR)
+def execute_Dijkstra_APSP_parallel(vertici, connections):
+    g = GraphAdjList(vertici, connections, directed=DIR)
 
     num_cores = mp.cpu_count()
     # print("num cores: ", num_cores)
@@ -120,16 +118,13 @@ def execute_Dijkstra_APSP_parallel(vertici, connections, adj_list):
     # print("Valori percentuali CPU:", values)
     # print("Tempo totale per la creazione dei processi:", process_creation)
 
-    # if adj_list:
-    #     print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA PARALLELO:", time,
-    #           "\n/////////////////////////////////////////////////////////////////////////////\n")
-    # else:
-    #     print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA PARALLELO:", time,
-    #           "\n/////////////////////////////////////////////////////////////////////////////\n")
+    # print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA PARALLELO:", time)
     return time
+
 
 if __name__ == '__main__':
     import os
+
     os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
     # value = int(input("Creare un nuovo grafo (1) o usare un file per la lettura (2) ?:\n"))
     #
@@ -151,11 +146,11 @@ if __name__ == '__main__':
     #         raise IOError('Valore fornito non ammesso')
     #
     # elif value == 2:
-        # file_name = (input("Inserire nome file di lettura del grafo:\n"))
-        # connections, vertici = create_connections_from_file()
+    # file_name = (input("Inserire nome file di lettura del grafo:\n"))
+    # connections, vertici = create_connections()
 
-    # connections, vertici = create_connections_from_file_real_graph("p2p-Gnutella08")
-        # facebook_combined
+    # connections, vertici = create_connections_from_file("p2p-Gnutella08")
+    # facebook_combined
     # else:
     #     raise IOError('Valore fornito non ammesso')
     #
@@ -180,7 +175,6 @@ if __name__ == '__main__':
     # if DIR:
     #     execute_with_networkit(file_name)
 
-
     graph_list = []
     real_graph_list = []
     for folder in folders:
@@ -190,7 +184,6 @@ if __name__ == '__main__':
                 graph_list.append(file_name)
             else:
                 real_graph_list.append(file_name)
-
 
     graph_list = sorted(graph_list)
 
@@ -213,37 +206,33 @@ if __name__ == '__main__':
     # if list_input == 6: g_list = real_graph_list
 
     # create_barabasi_albert_graph(10, "g_BA_5")
-    g_list = ["g_BA_500"]
+    g_list = ["prova"]
 
     for file_name in g_list:
         # if "000" in file_name:
         #     continue
         # if "125" in file_name:
-            print(file_name)
-            connections, vertici = create_connections_from_file_real_graph(file_name)
-            if DIR:
-                index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))    # L / n(n - 1)
-            else:
-                index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))    # 2L / n(n - 1)
+        print(file_name)
+        connections, vertici = create_connections_from_file(file_name)
+        execute_with_networkit(file_name)
+        if DIR:
+            index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))  # L / n(n - 1)
+        else:
+            index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))  # 2L / n(n - 1)
 
-            time, mat_f = execute_FloydWarshall(vertici, connections)
-            report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
+        # time, mat_f = execute_FloydWarshall(vertici, connections)
+        # report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
+        #
+        # time = execute_Dijkstra_APSP(vertici, connections)
+        # report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
 
-            time, mat_d = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
-            report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
+        # print_solution(mat_d, vertici)
+        # print_solution(mat_f, vertici)
 
-
-            # print_solution(mat_d, vertici)
-            # print_solution(mat_f, vertici)
-
-            for i in range(len(vertici)):
-                for j in range(len(vertici)):
-                    if mat_f[i][j] != mat_d[i][j]:
-                        print("NO", [i], [j])
+        # for i in range(len(vertici)):
+        #     for j in range(len(vertici)):
+        #         if mat_f[i][j] != mat_d[i][j]:
+        #             print("NO", [i], [j])
 
     # time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
-            # report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
-
-
-
-
+    # report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)

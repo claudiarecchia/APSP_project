@@ -21,6 +21,7 @@ def write_connections_to_file(connections, file_name):
         writer = csv.DictWriter(graph_file, fieldnames=fieldnames)
         writer.writeheader()
         lines = 0
+        # nel caso in cui gli edge siano oggi Node (nel caso di creazione con Barabasi-Albert mediante networkit)
         if not(isinstance(connections[0][0], int)):
             for edge in connections:
                 writer.writerow({'nodo_partenza': edge[0].name, 'nodo_arrivo': edge[1].name, 'peso_arco': edge[2]})
@@ -34,107 +35,67 @@ def write_connections_to_file(connections, file_name):
 
 def create_connections_from_file(file_name, networkit=False):
     """
-    Attraverso tale funzione si rende possibile la creazione di un grafo uguale ad uno precedentemente creato,
-    le quali informazioni sono presenti all'interno di un file csv.
-    """
-    vertices_list = []
-    with open(graph_dir + '/' + file_name + '.csv', mode='r') as graph_file:
-        reader = csv.DictReader(graph_file)
-        line_count = 0
-        connections = []
-        for row in reader:
-            if line_count == 0:
-                line_count += 1
-            vertices_list.append(int(row["nodo_partenza"]))
-            vertices_list.append(int(row["nodo_arrivo"]))
-            connections.append([int(row["nodo_partenza"]), int(row["nodo_arrivo"]), int(row["peso_arco"])])
-            line_count += 1
-        print(f'Lette da file {line_count} linee.')
-        # gestione nodi isolati
-        # dalla generazione del grafo attraverso il metodo ER non è possibile sapere
-        # se il grafo creato è connesso
-        # vengono considerati tutti i vertici fino al vertice massimo presente nel file di lettura
-        if vertices_list:
-            m = max(vertices_list)
-            vertices_list = [x for x in range(0, m + 1)]
-        if not networkit:
-            # creazione oggetti Node
-            for i in range(len(vertices_list)):
-                vertices_list[i] = Node(i)
-
-            for element in connections:
-                element[0] = vertices_list[element[0]]
-                element[1] = vertices_list[element[1]]
-
-    return connections, vertices_list
-
-
-def create_connections_from_file_real_graph(file_name):
-    """
     Attraverso tale funzione si rende possibile la creazione di un grafo uguale ad uno esistente,
     le quali informazioni sono presenti all'interno di un file csv.
-    Files reperiti dalla piattaforma https://snap.stanford.edu/index.html
+    Funzione valida sia per i grafi generati mediante i metodi di ER, BA, sia per grafi a path e per grafi reali,
+    reperiti dalla piattaforma https://snap.stanford.edu/index.html
     """
     vertices_list = []
     with open(graph_dir + '/' + file_name + '.csv', mode='r') as graph_file:
         reader = csv.DictReader(graph_file)
         line_count = 0
         connections = []
-        # print(reader.fieldnames)
-
         if "peso_arco" not in reader.fieldnames:
-            with open(graph_dir + '/' + file_name + '.csv', mode='w', newline="") as graph_file:
-                fieldnames = reader.fieldnames + ["peso_arco"]
-                writer = csv.DictWriter(graph_file, fieldnames)
-                writer.writeheader()
-                for row in reader:
-                    row_copy = row
-                    row_copy.update({"peso_arco": randint(1, MAX)})
-                    writer.writerow(row_copy)
-        # print(reader.fieldnames)
+            add_weights(file_name, reader)
+            with open(graph_dir + '/' + file_name + '.csv', mode='r') as graph_file:
+                reader = csv.DictReader(graph_file)
+                vertices_list = read_file(connections, line_count, reader, vertices_list, networkit)
+        else:
+            vertices_list = read_file(connections, line_count, reader, vertices_list, networkit)
+        return connections, vertices_list
 
-        vertices_dict = {}
-        count = 0
-        for row in reader:
-            if line_count == 0:
-                line_count += 1
-            if int(row["nodo_partenza"]) not in vertices_list:
-                vertices_list.append(int(row["nodo_partenza"]))
-                # vertices_dict.update({"nodo": int(row["nodo_partenza"])})
-                vertices_dict[int(row["nodo_partenza"])] = int(row["nodo_partenza"])
-                count = count+1
-            if int(row["nodo_arrivo"]) not in vertices_list:
-                vertices_list.append(int(row["nodo_arrivo"]))
-                # vertices_dict.update({"nodo": int(row["nodo_arrivo"])})
-                vertices_dict[int(row["nodo_arrivo"])] = int(row["nodo_arrivo"])
-                count = count+1
-            connections.append([int(row["nodo_partenza"]), int(row["nodo_arrivo"]), int(row["peso_arco"])])
+
+def read_file(connections, line_count, reader, vertices_list, networkit):
+    vertices_dict = {}
+    count = 0
+    for row in reader:
+        if line_count == 0:
             line_count += 1
-        print(f'Lette da file {line_count} linee.')
-        # print(vertices_dict)
-        if vertices_list:
-            # ordino la lista
-            vertices_list = sorted(vertices_list)
-            # creazione oggetti Node
+        if int(row["nodo_partenza"]) not in vertices_list:
+            vertices_list.append(int(row["nodo_partenza"]))
+            vertices_dict[int(row["nodo_partenza"])] = int(row["nodo_partenza"])
+            count = count + 1
+        if int(row["nodo_arrivo"]) not in vertices_list:
+            vertices_list.append(int(row["nodo_arrivo"]))
+            vertices_dict[int(row["nodo_arrivo"])] = int(row["nodo_arrivo"])
+            count = count + 1
+        connections.append([int(row["nodo_partenza"]), int(row["nodo_arrivo"]), int(row["peso_arco"])])
+        line_count += 1
+    print(f'Lette da file {line_count} linee.')
+    if vertices_list:
+        # ordino la lista
+        vertices_list = sorted(vertices_list)
+        # creazione oggetti Node
+        if not networkit:
             for i in range(len(vertices_list)):
-                # vertices_list[i] = Node(i)
-                # vertices_dict[vertices_list[i]] = Node(vertices_list[i])
-                # vertices_dict[i] = Node(i)
                 vertices_list[i] = Node(vertices_list[i])
                 vertices_list[i].set_index(i)
-
             for element in connections:
-                # print(element[0], vertices_list[element[0]], element[1], vertices_list[element[1]] )
-                # element[0] = vertices_list[element[0]]
-                # element[1] = vertices_list[element[1]]
-
-                # element[0] = vertices_dict.get(element[0])
-                # element[1] = vertices_dict.get(element[1])
-
                 element[0] = get_node(vertices_list, element[0])
                 element[1] = get_node(vertices_list, element[1])
+    return vertices_list
 
-        return connections, vertices_list
+
+def add_weights(file_name, reader):
+    with open(graph_dir + '/' + file_name + '.csv', mode='w') as graph_file:
+        fieldnames = reader.fieldnames + ["peso_arco"]
+        writer = csv.DictWriter(graph_file, fieldnames)
+        writer.writeheader()
+        for row in reader:
+            row_copy = row
+            row_copy.update({"peso_arco": randint(1, MAX)})
+            writer.writerow(row_copy)
+
 
 
 def get_node(lista_vertici, element):
