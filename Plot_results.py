@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from IO_utilities import *
 
 executions = get_values_from_results()
-graph_type = ["g_BA", "g_ER_p01", "g_ER_p05", "g_ER_p1", "path", "p2p-Gnutella08", "p2p-Gnutella08", "p2p-Gnutella08",
+graph_type = ["g_BA", "g_ER_p01", "g_ER_p05", "g_ER_p1", "path", "p2p-Gnutella08", "facebook_combined", "Wiki-Vote",
               "soc-sign-bitcoinalpha"]
 i = 0
 
@@ -32,10 +32,10 @@ def plot_result():
         plt.title("Grafo a path")
     if graph_type[i] == "p2p-Gnutella08":
         plt.title("Grafo reale: p2p-Gnutella08")
-    if graph_type[i] == "p2p-Gnutella08":
-        plt.title("Grafo reale: p2p-Gnutella08")
-    if graph_type[i] == "p2p-Gnutella08":
-        plt.title("Grafo reale: p2p-Gnutella08")
+    if graph_type[i] == "facebook_combined":
+        plt.title("Grafo reale: facebook_combined")
+    if graph_type[i] == "Wiki-Vote":
+        plt.title("Grafo reale: Wiki-Vote")
     if graph_type[i] == "soc-sign-bitcoinalpha":
         plt.title("Grafo reale: soc-sign-bitcoinalpha")
     plt.ylabel('Tempo di esecuzione')

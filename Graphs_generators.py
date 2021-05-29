@@ -15,7 +15,7 @@ def create_barabasi_albert_graph(n_vertici, file_name):
             connections.append([u, v, randint(1, MAX)])
 
     write_connections_to_file(connections, file_name)
-    connections, vertices_list = create_connections_from_file_real_graph(file_name)
+    connections, vertices_list = create_connections_from_file(file_name)
     return connections, vertices_list
 
 

@@ -24,17 +24,6 @@ def dijkstra(grafo, nodo_partenza):
         u = fheap.extract_min()
         lista_archi_u_v = grafo.get_edges(u)
         for i in range(len(lista_archi_u_v)):
-
-            # # controllo per matrice di adiacenza se v=u
-            # if isinstance(lista_archi_u_v[0], int):
-            #     if u.name != i:
-            #         dist = lista_archi_u_v[i]
-            #         v = grafo.vertici[i]
-            #     else:
-            #         # se u=v allora procedo con il prossimo elemento nella lista di adiacenza
-            #         continue
-            # else:
-
             arco = lista_archi_u_v[i]
             v = arco[0]
             dist = arco[1]
