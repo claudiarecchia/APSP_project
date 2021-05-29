@@ -9,7 +9,8 @@ from Graphs_generators import *
 import os
 import networkx as nx
 import matplotlib.pyplot as plt
-
+import os
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 def execute_with_networkit(file_name):
     """
@@ -47,8 +48,6 @@ def execute_FloydWarshall(vertici, connections):
     cpu_total = timer()
     matrice = floyd_warshall(g)
     time = round(timer() - cpu_total, 6)
-    # print("TEMPO CPU TOTALE APSP FLOYD-WARSHALL:", time,
-    #       "\n/////////////////////////////////////////////////////////////////////////////\n\n")
     return time, matrice
 
 
@@ -69,20 +68,11 @@ def execute_Dijkstra_APSP(vertici, connections):
         for vertex in vertici:
             vertex.reset_properties(vertex.name)
 
-    # print("DIJKSTRA")
-    # print_solution(mat, vertici)
-
     time = round(timer() - cpu_total, 6)
-    #
+
     # values = psutil.cpu_percent(percpu=True)
     # print("Valori percentuali CPU:", values)
 
-    # if adj_list:
-    #     print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA:", time,
-    #           "\n/////////////////////////////////////////////////////////////////////////////\n")
-    # else:
-    #     print("TEMPO CPU TOTALE APSP DIJKSTRA MATRICE DI ADIACENZA:", time,
-    #           "\n/////////////////////////////////////////////////////////////////////////////\n")
     return time
 
 
@@ -95,7 +85,6 @@ def exec_dijkstra(grafo, num_nodo):
 
 def execute_Dijkstra_APSP_parallel(vertici, connections):
     g = GraphAdjList(vertici, connections, directed=DIR)
-
     num_cores = mp.cpu_count()
     # print("num cores: ", num_cores)
     process_creation = 0
@@ -117,122 +106,54 @@ def execute_Dijkstra_APSP_parallel(vertici, connections):
     values = psutil.cpu_percent(percpu=True)
     # print("Valori percentuali CPU:", values)
     # print("Tempo totale per la creazione dei processi:", process_creation)
-
     # print("TEMPO CPU TOTALE APSP DIJKSTRA LISTE DI ADIACENZA PARALLELO:", time)
     return time
 
 
 if __name__ == '__main__':
-    import os
+    value = int(input("Creare un nuovo grafo (1) o usare un file per la lettura (2) ?:\n"))
 
-    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
-    # value = int(input("Creare un nuovo grafo (1) o usare un file per la lettura (2) ?:\n"))
-    #
-    # if value == 1:
-    #     file_name = (input("Inserire nome file di scrittura del nuovo grafo:\n"))
-    #     n = int(input("Inserire il numero di vertici del grafo:\n"))
-    #     vertici = []
-    #     for i in range(n):
-    #         vertici.append(Node(i))
-    #
-    #     graph_type = int(input("Creare un grafo sul modello ER (1), un grafo a path (2) o un grafo con modello Barabasi-Albert (3) ?:\n"))
-    #     if graph_type == 1:
-    #         connections = create_ER_graph(vertici, m, file_name)
-    #     elif graph_type == 2:
-    #         connections = create_path_graph(vertici, file_name)
-    #     elif graph_type == 3:
-    #         connections, vertici = create_barabasi_albert_graph(n, file_name)
-    #     else:
-    #         raise IOError('Valore fornito non ammesso')
-    #
-    # elif value == 2:
-    # file_name = (input("Inserire nome file di lettura del grafo:\n"))
-    # connections, vertici = create_connections()
+    if value == 1:
+        file_name = (input("Inserire nome file di scrittura del nuovo grafo:\n"))
+        n = int(input("Inserire il numero di vertici del grafo:\n"))
+        vertici = []
+        for i in range(n):
+            vertici.append(Node(i))
 
-    # connections, vertici = create_connections_from_file("p2p-Gnutella08")
-    # facebook_combined
-    # else:
-    #     raise IOError('Valore fornito non ammesso')
-    #
-    # assert connections, "Il grafo è vuoto"
-    #
-    # # calcolo indice di densità del grafo
-    # if DIR:
-    #     # L / n(n - 1)
-    #     index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))
-    # else:
-    #     index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))
-
-    # time = execute_Dijkstra_APSP(vertici, connections, adj_list=True)
-    # report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
-
-    # time = execute_FloydWarshall(vertici, connections)
-    # report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
-
-    # execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
-    # report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
-
-    # if DIR:
-    #     execute_with_networkit(file_name)
-
-    graph_list = []
-    real_graph_list = []
-    for folder in folders:
-        for filename in os.listdir("./" + folder):
-            file_name = filename.replace('.csv', '')
-            if folder == folders[0]:
-                graph_list.append(file_name)
-            else:
-                real_graph_list.append(file_name)
-
-    graph_list = sorted(graph_list)
-
-    # print(graph_list)
-
-    list1 = graph_list[0:5]
-    list2 = graph_list[5:10]
-    list3 = graph_list[10:15]
-    list4 = graph_list[15:20]
-    list5 = graph_list[20:25]
-    g_list = []
-    #
-    # list_input = int(input("1 to 6: "))
-    #
-    # if list_input == 1: g_list = list1
-    # if list_input == 2: g_list = list2
-    # if list_input == 3: g_list = list3
-    # if list_input == 4: g_list = list4
-    # if list_input == 5: g_list = list5
-    # if list_input == 6: g_list = real_graph_list
-
-    # create_barabasi_albert_graph(10, "g_BA_5")
-    g_list = ["prova"]
-
-    for file_name in g_list:
-        # if "000" in file_name:
-        #     continue
-        # if "125" in file_name:
-        print(file_name)
-        connections, vertici = create_connections_from_file(file_name)
-        execute_with_networkit(file_name)
-        if DIR:
-            index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))  # L / n(n - 1)
+        graph_type = int(input("Creare un grafo sul modello ER (1), un grafo a path (2) o un grafo con modello Barabasi-Albert (3) ?:\n"))
+        if graph_type == 1:
+            connections = create_ER_graph(vertici, m, file_name)
+        elif graph_type == 2:
+            connections = create_path_graph(vertici, file_name)
+        elif graph_type == 3:
+            connections, vertici = create_barabasi_albert_graph(n, file_name)
         else:
-            index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))  # 2L / n(n - 1)
+            raise IOError('Valore fornito non ammesso')
 
-        # time, mat_f = execute_FloydWarshall(vertici, connections)
-        # report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
-        #
-        # time = execute_Dijkstra_APSP(vertici, connections)
-        # report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
+    elif value == 2:
+        file_name = (input("Inserire nome file di lettura del grafo:\n"))
+        connections, vertici = create_connections_from_file(file_name)
 
-        # print_solution(mat_d, vertici)
-        # print_solution(mat_f, vertici)
+    else:
+        raise IOError('Valore fornito non ammesso')
 
-        # for i in range(len(vertici)):
-        #     for j in range(len(vertici)):
-        #         if mat_f[i][j] != mat_d[i][j]:
-        #             print("NO", [i], [j])
+    assert connections, "Il grafo è vuoto"
 
-    # time = execute_Dijkstra_APSP_parallel(vertici, connections, adj_list=True)
-    # report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
+    # calcolo indice di densità del grafo
+    if DIR:
+        # L / n(n - 1)
+        index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))
+    else:
+        index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))
+
+    time = execute_FloydWarshall(vertici, connections)
+    report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
+
+    time = execute_Dijkstra_APSP(vertici, connections)
+    report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
+
+    execute_Dijkstra_APSP_parallel(vertici, connections)
+    report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
+
+    if DIR:
+        execute_with_networkit(file_name)
