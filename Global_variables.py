@@ -36,3 +36,7 @@ report_dir = "results"
 report_file = "results"
 
 folders = [graph_dir, real_graph_dir]
+
+# variabile per controllare i risultati ottenuti dagli esperimenti Floyd-Warshall, Dijkstra, NetworKit,
+# mediante l'utilizzo dell'assert
+check = False

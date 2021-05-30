@@ -39,9 +39,4 @@ def dijkstra(grafo, nodo_partenza):
 
 def shortest(grafo, nodo_partenza, mat):
     for vertice in grafo.vertici:
-        # print("Il vertice", vertice.name, "è a distanza", vertice.key, "dal nodo sorgente", nodo_partenza.name)
-        mat[int(nodo_partenza.name)][int(vertice.name)] = vertice.key
-
-
-
-
+        mat[int(nodo_partenza.index)][int(vertice.index)] = vertice.key

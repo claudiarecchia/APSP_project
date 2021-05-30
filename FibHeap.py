@@ -61,7 +61,7 @@ class Node:
         self.added = False
         self.index = None
 
-    def reset_properties(self, name):
+    def reset_properties(self, name, index):
         self.name = name
         self.key = None
         self.left = None
@@ -71,7 +71,7 @@ class Node:
         self.degree = 0
         self.mark = False
         self.added = False
-        self.index = None
+        self.index = index
 
     def set_index(self, index):
         self.index = index

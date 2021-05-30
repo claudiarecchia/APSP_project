@@ -24,7 +24,6 @@ def print_solution(matrice, vertici):
             if matrice[i][j] == sys.maxsize:
                 matrice[i][j] = "INF"
     n_elements = []
-    # for i in range(len(vertici)): n_elements.append(i)
     for i in vertici: n_elements.append(i.name)
     print_nice = pd.DataFrame(matrice, index=n_elements, columns=n_elements)
     print(print_nice)
