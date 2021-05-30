@@ -42,6 +42,8 @@ def plot_result():
     plt.legend()
     plt.show()
 
+dijkstra = []
+floyd = []
 
 for graph in graph_type:
     ex_time = []
@@ -60,6 +62,7 @@ for graph in graph_type:
                 ex_time_f.append(float(ex[2]))  # tempo di esecuzione
                 num_nodes_f.append(float(ex[3]))  # n_nodi
                 num_edges_f.append(ex[4])  # n_edges
+                floyd.append([ex[0], float(ex[2]), ex[3], ex[4], float(ex[5])])
             elif "DP" in ex[1]:
                 ex_time_dp.append(float(ex[2]))  # tempo di esecuzione
                 num_nodes_dp.append(float(ex[3]))  # n_nodi
@@ -69,50 +72,50 @@ for graph in graph_type:
                 density.append(float(ex[5]))  # indice di densità
                 num_nodes.append(float(ex[3]))  # n_nodi
                 num_edges.append(ex[4])  # n_edges
+                # nome, ex_time, n_nodi, n_edges, density
+                dijkstra.append([ex[0], float(ex[2]), ex[3], ex[4], float(ex[5])])
 
         density_list.append([ex[0], density, ex_time])
 
     for val in [0, 1]:
-        plot_result()
+        # plot_result()
+        pass
     i += 1
 
-# density_dijkstra_125 = []
-# time_dijkstra_125 = []
-# density_dijkstra_250 = []
-# time_dijkstra_250 = []
-# density_dijkstra_500 = []
-# time_dijkstra_500 = []
-# density_dijkstra_1000 = []
-# time_dijkstra_1000 = []
-# density_dijkstra_2000 = []
-# time_dijkstra_2000 = []
-#
-# for element in density_list:
-#     print(element[0])
-#     if element[0] == "g_ER_p01_125" or element[0] == "g_ER_p05_125" or element[0] == "g_ER_p1_125":
-#         density_dijkstra_125.append(element[1])
-#         time_dijkstra_125.append(element[2])
-#
-#     if element[0] == "g_ER_p01_250" or element[0] == "g_ER_p05_250" or element[0] == "g_ER_p1_250":
-#         density_dijkstra_250.append(element[1])
-#         time_dijkstra_250.append(element[2])
-#
-#     if element[0] == "g_ER_p01_500" or element[0] == "g_ER_p05_500" or element[0] == "g_ER_p1_500":
-#         density_dijkstra_500.append(element[1])
-#         time_dijkstra_500.append(element[2])
-#
-#     if element[0] == "g_ER_p01_1000" or element[0] == "g_ER_p05_1000" or element[0] == "g_ER_p1_1000":
-#         density_dijkstra_1000.append(element[1])
-#         time_dijkstra_1000.append(element[2])
-#
-#     if element[0] == "g_ER_p01_2000" or element[0] == "g_ER_p05_2000" or element[0] == "g_ER_p1_2000":
-#         density_dijkstra_2000.append(element[1])
-#         time_dijkstra_2000.append(element[2])
-#
-#
-# plt.plot(density_dijkstra_2000, time_dijkstra_2000, 'b', marker='o', label='2000 nodi')
-# plt.title("Relazione tempo esecuzione/indice di densità per l'algoritmo di Dijkstra")
-# plt.ylabel('Tempo di esecuzione')
-# plt.xlabel('Indice di densità del grafo')
-# plt.legend()
-# plt.show()
+plt.plot(dijkstra[4][4], dijkstra[4][1], 'b', marker='o', label=dijkstra[4][0])
+plt.plot(dijkstra[9][4], dijkstra[9][1], 'y', marker='o', label=dijkstra[9][0])
+plt.plot(dijkstra[14][4], dijkstra[14][1], 'm', marker='o', label=dijkstra[14][0])
+plt.plot(dijkstra[19][4], dijkstra[19][1], 'g', marker='o', label=dijkstra[19][0])
+plt.plot(dijkstra[24][4], dijkstra[24][1], 'r', marker='o', label=dijkstra[24][0])
+plt.xlabel('Densità')
+plt.ylabel('Tempo di esecuzione')
+plt.title("Relazione Dijkstra: tempo di esecuzione, densità")
+plt.legend()
+plt.show()
+
+plt.plot(dijkstra[24][3], dijkstra[24][1], 'r', marker='o', label=dijkstra[24][0])
+plt.plot(dijkstra[4][3], dijkstra[4][1], 'b', marker='o', label=dijkstra[4][0])
+plt.plot(dijkstra[9][3], dijkstra[9][1], 'y', marker='o', label=dijkstra[9][0])
+plt.plot(dijkstra[14][3], dijkstra[14][1], 'm', marker='o', label=dijkstra[14][0])
+plt.plot(dijkstra[19][3], dijkstra[19][1], 'g', marker='o', label=dijkstra[19][0])
+plt.xlabel('Numero archi')
+plt.ylabel('Tempo di esecuzione')
+plt.title("Relazione Dijkstra: tempo di esecuzione, numero archi")
+plt.legend()
+plt.show()
+
+plt.plot([dijkstra[0][2], dijkstra[1][2], dijkstra[2][2], dijkstra[3][2], dijkstra[4][2]], [dijkstra[0][1], dijkstra[1][1], dijkstra[2][1], dijkstra[3][1], dijkstra[4][1]], 'b', marker='o', label=(dijkstra[0][0])[:4])
+plt.plot([dijkstra[5][2], dijkstra[6][2], dijkstra[7][2], dijkstra[8][2], dijkstra[9][2]], [dijkstra[5][1], dijkstra[6][1], dijkstra[7][1], dijkstra[8][1], dijkstra[9][1]], 'y', marker='o', label=(dijkstra[5][0])[:8])
+plt.plot([dijkstra[10][2], dijkstra[11][2], dijkstra[12][2], dijkstra[13][2], dijkstra[14][2]], [dijkstra[10][1], dijkstra[11][1], dijkstra[12][1], dijkstra[13][1], dijkstra[14][1]], 'pink', marker='o', label=(dijkstra[10][0])[:8])
+plt.plot([dijkstra[15][2], dijkstra[16][2], dijkstra[17][2], dijkstra[18][2], dijkstra[19][2]], [dijkstra[15][1], dijkstra[16][1], dijkstra[17][1], dijkstra[18][1], dijkstra[19][1]], 'lightblue', marker='o', label=(dijkstra[15][0])[:7])
+plt.plot([dijkstra[20][2], dijkstra[21][2], dijkstra[22][2], dijkstra[23][2], dijkstra[24][2]], [dijkstra[20][1], dijkstra[21][1], dijkstra[22][1], dijkstra[23][1], dijkstra[24][1]], 'g--', marker='o', label=(dijkstra[20][0])[:6])
+plt.plot([floyd[0][2], floyd[1][2], floyd[2][2], floyd[3][2], floyd[4][2]], [floyd[0][1], floyd[1][1], floyd[2][1], floyd[3][1], floyd[4][1]], 'r', marker='o', label=(dijkstra[0][0])[:4])
+plt.plot([floyd[5][2], floyd[6][2], floyd[7][2], floyd[8][2], floyd[9][2]], [floyd[5][1], floyd[6][1], floyd[7][1], floyd[8][1], floyd[9][1]], 'r', marker='o', label=(dijkstra[5][0])[:8])
+plt.plot([floyd[10][2], floyd[11][2], floyd[12][2], floyd[13][2], floyd[14][2]], [floyd[10][1], floyd[11][1], floyd[12][1], floyd[13][1], floyd[14][1]], 'r', marker='o', label=(dijkstra[10][0])[:8])
+plt.plot([floyd[15][2], floyd[16][2], floyd[17][2], floyd[18][2], floyd[19][2]], [floyd[15][1], floyd[16][1], floyd[17][1], floyd[18][1], floyd[19][1]], 'r', marker='o', label=(dijkstra[15][0])[:7])
+plt.plot([floyd[20][2], floyd[21][2], floyd[22][2], floyd[23][2], floyd[24][2]], [floyd[20][1], floyd[21][1], floyd[22][1], floyd[23][1], floyd[24][1]], 'r', marker='o', label=(dijkstra[20][0])[:6])
+plt.xlabel('Numero nodi')
+plt.ylabel('Tempo di esecuzione')
+plt.title("Relazione Dijkstra - Floyd-Warshall")
+plt.legend()
+plt.show()
