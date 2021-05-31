@@ -35,6 +35,9 @@ report_dir = "results"
 # nome file utilizzato per reperire i dati delle esecuzioni degli algoritmi
 report_file = "results"
 
+# nome file utilizzato per registrare i dati dello speedup tra Dijkstra sequenziale e parallelo
+speedup_file = "speedup"
+
 folders = [graph_dir, real_graph_dir]
 
 # variabile per controllare i risultati ottenuti dagli esperimenti Floyd-Warshall, Dijkstra, NetworKit,
