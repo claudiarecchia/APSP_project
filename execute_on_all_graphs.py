@@ -33,11 +33,12 @@ if __name__ == '__main__':
     for file_name in g_list:
         print(file_name)
         connections, vertici = create_connections_from_file(file_name)
+
         # execute_with_networkit(file_name)
         if DIR:
-            index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))  # L / n(n - 1)
+            index = len(connections) / (len(vertici) * (len(vertici) - 1))  # L / n(n - 1)
         else:
-            index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))  # 2L / n(n - 1)
+            index = (2 * (len(connections))) / (len(vertici) * (len(vertici) - 1))  # 2L / n(n - 1)
 
         time, mat_f = execute_FloydWarshall(vertici, connections)
         report_exec_time(file_name, "F", time, len(vertici), len(connections), index)

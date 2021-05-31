@@ -134,17 +134,13 @@ if __name__ == '__main__':
     assert connections, "Il grafo è vuoto"
     # calcolo indice di densità del grafo
     if DIR:
-        # L / n(n - 1)
-        index = (len(connections) - 1) / (len(vertici) * (len(vertici) - 1))
+        index = len(connections) / (len(vertici) * (len(vertici) - 1))  # L / n(n - 1)
     else:
-        index = (2 * (len(connections) - 1)) / (len(vertici) * (len(vertici) - 1))
-
+        index = (2 * len(connections)) / (len(vertici) * (len(vertici) - 1))  # 2L / n(n - 1)
     time, mat_f = execute_FloydWarshall(vertici, connections)
     report_exec_time(file_name, "F", time, len(vertici), len(connections), index)
-
     time, mat_d = execute_Dijkstra_APSP(vertici, connections, check)
     report_exec_time(file_name, "D", time, len(vertici), len(connections), index)
-
     execute_Dijkstra_APSP_parallel(vertici, connections)
     report_exec_time(file_name, "DP", time, len(vertici), len(connections), index)
     if DIR:

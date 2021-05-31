@@ -78,7 +78,7 @@ for graph in graph_type:
         density_list.append([ex[0], density, ex_time])
 
     for val in [0, 1]:
-        # plot_result()
+        plot_result()
         pass
     i += 1
 
